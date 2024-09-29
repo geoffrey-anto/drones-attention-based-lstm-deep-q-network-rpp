@@ -1,7 +1,9 @@
 import airsim
 import numpy as np
 
+
 class SafetyChecker:
+
     def __init__(self, client, config):
         self.client = client
         self.config = config
@@ -13,7 +15,7 @@ class SafetyChecker:
             return False
 
         # Check for proximity to obstacles
-        lidar_data = self.client.getLidarData()
+        lidar_data = self.client.getLidarData(lidar_name="LidarSensor1", vehicle_name="Drone1")
         if lidar_data.point_cloud:
             points = np.array(lidar_data.point_cloud).reshape((-1, 3))
             distances = np.linalg.norm(points, axis=1)
@@ -24,6 +26,6 @@ class SafetyChecker:
 
     def avoid_collision(self):
         # Simple collision avoidance: move upwards
-        current_position = self.client.getMultirotorState().kinematics_estimated.position
+        current_position = self.client.getMultirotorState(vehicle_name="Drone1").kinematics_estimated.position
         safe_position = airsim.Vector3r(current_position.x_val, current_position.y_val, current_position.z_val - 5)
         self.client.moveToPositionAsync(safe_position.x_val, safe_position.y_val, safe_position.z_val, 5).join()

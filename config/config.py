@@ -4,7 +4,7 @@ class Config:
     SEQ_LENGTH = 50
 
     # Model training
-    EPOCHS = 50
+    EPOCHS = 100
     BATCH_SIZE = 32
 
     # Action mapping

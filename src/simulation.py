@@ -25,7 +25,7 @@ class Simulation:
 
             # Attempt to spawn the obstacle
             try:
-                self.client.simSpawnObject(f"obstacle_{_}", "Cube", pose)
+                self.client.simSpawnObject(f"obstacle_{_}", "Cube", pose, scale=airsim.Vector3r(1, 1, 1))
             except Exception as e:
                 print(f"Failed to spawn obstacle {_}: {e}")
 
@@ -40,10 +40,10 @@ class Simulation:
         mission_planner = MissionPlanner(self.config)
         mission = mission_planner.plan_mission()
 
-        try:
-            drone.run_mission(mission)
-        except Exception as e:
-            print(f"Simulation error: {e}")
-        finally:
-            drone.cleanup()
+        # try:
+        drone.run_mission(mission)
+        # except Exception as e:
+        #     print(f"Simulation error: {e}")
+        # finally:
+        #     drone.cleanup()
 

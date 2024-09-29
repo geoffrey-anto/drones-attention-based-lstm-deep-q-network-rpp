@@ -17,7 +17,7 @@ class DroneMOAAPP:
 
     def get_state(self):
         """Get the current state of the UAV (position, velocity)"""
-        state = self.client.getMultirotorState()
+        state = self.client.getMultirotorState(vehicle_name="Drone1")
         position = state.kinematics_estimated.position
         velocity = state.kinematics_estimated.linear_velocity
         return np.array([
@@ -33,7 +33,7 @@ class DroneMOAAPP:
 
     def move_drone(self, action):
         """Move the drone based on the action"""
-        waypoint = self.config.ACTION_MAP[action]  # Map the action to a movement command
+        waypoint = action # Map the action to a movement command
         if self.safety_checker.is_safe_move(waypoint):
             self.client.moveToPositionAsync(waypoint[0], waypoint[1], waypoint[2], 5).join()
         else:
