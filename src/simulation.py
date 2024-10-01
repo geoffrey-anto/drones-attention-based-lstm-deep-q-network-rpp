@@ -2,10 +2,12 @@ import airsim
 import numpy as np
 from src.mission_planner import MissionPlanner
 
+
 class Simulation:
+
     def __init__(self, config):
         self.config = config
-        self.client = airsim.MultirotorClient(ip="192.168.1.4")
+        self.client = airsim.MultirotorClient(ip="192.168.0.100")
         self.client.confirmConnection()
 
     def setup_environment(self):
@@ -40,10 +42,10 @@ class Simulation:
         mission_planner = MissionPlanner(self.config)
         mission = mission_planner.plan_mission()
 
-        # try:
-        drone.run_mission(mission)
-        # except Exception as e:
-        #     print(f"Simulation error: {e}")
-        # finally:
-        #     drone.cleanup()
+        try:
+            drone.run_mission(mission)
+        except Exception as e:
+            print(f"Simulation error: {e}")
+        finally:
+            drone.cleanup()
 

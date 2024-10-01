@@ -4,3 +4,4 @@ msgpack-rpc-python==0.4.0
 airsim
 matplotlib
 tornado
+tqdm

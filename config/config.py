@@ -9,10 +9,10 @@ class Config:
 
     # Action mapping
     ACTION_MAP = {
-        0: [0, 0, -1],  # Move forward
-        1: [1, 0, 0],   # Move right
-        2: [-1, 0, 0],  # Move left
-        3: [0, 0, 1],   # Move backward
+        0: [0, 0, -3],  # Move forward
+        1: [3, 0, 0],  # Move right
+        2: [-3, 0, 0],  # Move left
+        3: [0, 0, 3],  # Move backward
     }
 
     # AirSim
@@ -24,4 +24,4 @@ class Config:
     # Simulation
     NUM_OBSTACLES = 10
     
-    IP="192.168.1.4"
+    IP = "192.168.0.100"
