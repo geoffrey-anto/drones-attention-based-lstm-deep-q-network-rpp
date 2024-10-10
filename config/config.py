@@ -6,13 +6,18 @@ class Config:
     # Model training
     EPOCHS = 100
     BATCH_SIZE = 32
+    
+    ACTION_STEP_SIZE_XY = 2
+    ACTION_STEP_SIZE_Z = 0
 
     # Action mapping
     ACTION_MAP = {
-        0: [0, 0, -3],  # Move forward
-        1: [3, 0, 0],  # Move right
-        2: [-3, 0, 0],  # Move left
-        3: [0, 0, 3],  # Move backward
+        0: [+ACTION_STEP_SIZE_XY, 0, 0],  # Move Forward (+X)
+        1: [-ACTION_STEP_SIZE_XY, 0, 0],  # Move Backward (-X)
+        2: [0, -ACTION_STEP_SIZE_XY, 0],  # Move Left (-Y)
+        3: [0, +ACTION_STEP_SIZE_XY, 0],  # Move Right (+Y)
+        4: [0, 0, +ACTION_STEP_SIZE_Z],  # Move Up (+Z)
+        5: [0, 0, -ACTION_STEP_SIZE_Z]  # Move Down (-Z)
     }
 
     # AirSim
@@ -24,4 +29,4 @@ class Config:
     # Simulation
     NUM_OBSTACLES = 10
     
-    IP = "192.168.0.100"
+    IP = "192.168.1.4"

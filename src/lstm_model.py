@@ -6,7 +6,9 @@ from collections import deque
 from tensorflow.keras.models import Model
 import random
 
+
 class DQNLSTM:
+
     def __init__(self, input_shape, action_size):
         self.action_size = action_size
         self.memory = deque(maxlen=2000)  # Experience replay buffer
@@ -56,25 +58,29 @@ class DQNLSTM:
         return np.argmax(q_values[0])  # Exploit: choose best action
 
     def replay(self, batch_size):
-        """Trains the model using randomly sampled experiences from memory"""
+        """Train the model using experiences in memory"""
         if len(self.memory) < batch_size:
             return
         
         minibatch = random.sample(self.memory, batch_size)
         for state, action, reward, next_state, done in minibatch:
+            # Reshape state to match the model's expected input shape
+            state = state.reshape((1, self.config.SEQ_LENGTH, 6))
+            
+            # Check the shape of next_state and pad if necessary
+            if next_state.shape != (1, self.config.SEQ_LENGTH, 6):
+                next_state_padded = np.zeros((1, self.config.SEQ_LENGTH, 6))
+                next_state_padded[0, -next_state.shape[1]:,:] = next_state
+                next_state = next_state_padded
+            
             target = self.model.predict(state)
             if done:
                 target[0][action] = reward
             else:
                 next_q = self.target_model.predict(next_state)[0]
                 target[0][action] = reward + self.gamma * np.amax(next_q)
-
-            # Train the model
+            
             self.model.fit(state, target, epochs=1, verbose=0)
-
-        # Decay exploration rate
-        if self.epsilon > self.epsilon_min:
-            self.epsilon *= self.epsilon_decay
 
     def load(self, name):
         """Loads a model from file"""
