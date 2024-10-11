@@ -124,6 +124,10 @@ class Environment:
             return 'go-'
         else:
             return 'ro-'
+        
+    def plot_static_points(self):
+        plt.plot([self.start_point[0]], [self.start_point[1]], [self.start_point[2]], 'go')
+        plt.plot([self.target_point[0]], [self.target_point[1]], [self.target_point[2]], 'ro')
             
     def plot_points(self, points):
         for i in range(len(points) - 1):
@@ -145,7 +149,8 @@ class Environment:
             self.ax.set_zlim([0, h])
             
     def show_environment(self):
-        self.plot_points([self.start_point, *self.agent.path, self.target_point])
+        self.plot_static_points()
+        self.plot_points([*self.agent.path])
         self.plot_obstacles()
         plt.show()
     
