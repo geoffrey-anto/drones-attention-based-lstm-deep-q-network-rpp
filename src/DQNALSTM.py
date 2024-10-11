@@ -2,10 +2,10 @@ import tensorflow as tf
 from tensorflow.keras.layers import LSTM, Dense, Attention, Input
 from collections import deque
 from tensorflow.keras.models import Model
-from ExperienceReplayBuffer import ExperienceReplayBuffer
+from src.ExperienceReplayBuffer import ExperienceReplayBuffer
 import numpy as np
-from StateHistoryBuffer import StateHistoryBuffer
-from config import SEQUENCE_LEN, STATE_SIZE, REWARD_MAP, ACTION_SIZE
+from src.StateHistoryBuffer import StateHistoryBuffer
+from src.Config import SEQUENCE_LEN, STATE_SIZE, REWARD_MAP, ACTION_SIZE
 
 
 class DQNALSTM:
