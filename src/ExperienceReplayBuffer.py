@@ -29,15 +29,3 @@ class ExperienceReplayBuffer():
         
     def __len__(self):
         return len(self._queue)
-
-
-if __name__ == "__main__":
-    experience_replay_buffer = ExperienceReplayBuffer(3)
-    experience_replay_buffer.clear()
-    
-    experience_replay_buffer.add([0.1] * 15, 1, 0.1)
-    experience_replay_buffer.add([0.2] * 15, 2, 0.2)
-    experience_replay_buffer.add([0.3] * 15, 3, 0.3)
-    experience_replay_buffer.print()
-    
-    print(len(experience_replay_buffer))
