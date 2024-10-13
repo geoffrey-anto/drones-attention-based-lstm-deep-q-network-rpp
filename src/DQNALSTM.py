@@ -12,7 +12,7 @@ import pickle
 class DQNALSTM:
 
     def __init__(self, input_shape):
-        self.memory = ExperienceReplayBuffer(200)
+        self.memory = ExperienceReplayBuffer(100)
         self.gamma = 0.95
         self.epsilon = 1.0
         self.epsilon_min = 0.15
@@ -28,7 +28,7 @@ class DQNALSTM:
         x = MultiHeadAttention(num_heads=2, key_dim=64)(x, x)
         x = LSTM(64)(x)
         x = Dense(64, activation='relu')(x)
-        outputs = Dense(action_size, activation='sigmoid')(x)
+        outputs = Dense(action_size, activation='linear')(x)
         
         model = Model(inputs=inputs, outputs=outputs)
         model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=self.learning_rate), loss='mse')
@@ -46,14 +46,16 @@ class DQNALSTM:
             #     return np.random.choice(ACTION_SIZE)
             curr = state.get_state()
             curr = curr.reshape((1, SEQUENCE_LEN, STATE_SIZE))
-            return np.argmax(self.model.predict(curr, verbose=0)[0])
+            pred = self.model.predict(curr, verbose=0)[0]
+            return np.argmax(pred)
         
         if np.random.rand() <= self.epsilon:
             return np.random.choice(ACTION_SIZE)
         else:
             curr = state.get_state()
             curr = curr.reshape((1, SEQUENCE_LEN, STATE_SIZE))
-            return np.argmax(self.model.predict(curr, verbose=0)[0])
+            pred = self.model.predict(curr, verbose=0)[0]
+            return np.argmax(pred)
 
     def replay(self, batch_size):
         if len(self.memory) < batch_size:
@@ -66,6 +68,7 @@ class DQNALSTM:
             state = np.reshape(state, (1, SEQUENCE_LEN, STATE_SIZE))
             
             target = self.model.predict(state, verbose=0)
+            print(f"Target: {target}", end=" ")
             
             if item.rt == REWARD_MAP["arrival"]:
                 target[0][item.at] = item.rt
@@ -74,6 +77,8 @@ class DQNALSTM:
                 next_state = np.reshape(next_state, (1, SEQUENCE_LEN, STATE_SIZE))
                 next_q = self.target_model.predict(next_state, verbose=0)[0]
                 target[0][item.at] = item.rt + self.gamma * np.max(next_q)
+            
+            print(f"Updated: {target}")
             
             self.model.fit(state, target, epochs=1, verbose=0) 
 

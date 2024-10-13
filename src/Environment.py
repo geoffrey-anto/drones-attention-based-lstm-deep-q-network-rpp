@@ -7,35 +7,25 @@ import random as rnd
 
 
 class DroneMOAAPP:
-    _instance = None
-    _initialized = False
-    
-    def __new__(cls, *_, **__):
-        if not cls._instance:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-    
+
     def __init__(self, start_position, target_position, obstacles, train) -> None:
-        if not self._initialized:
-            self.position = start_position
-            self.target_position = target_position
-            
-            self.obstacles = obstacles
-            
-            self.D = 0.0
-            self.psi = 0.0
-            self.alpha = 0.0
-            self.delta_alpha = 0.0
-            
-            self.ds = [0.0] * 9
-            
-            self.path = []
-            self.train = train
-            self.path_count = 0
-            
-            self.dmin = min(self.ds)
-            
-            self._initialized = True
+        self.position = start_position
+        self.target_position = target_position
+        
+        self.obstacles = obstacles
+        
+        self.D = 0.0
+        self.psi = 0.0
+        self.alpha = 0.0
+        self.delta_alpha = 0.0
+        
+        self.ds = [0.0] * 9
+        
+        self.path = []
+        self.train = train
+        self.path_count = 0
+        
+        self.dmin = min(self.ds)
           
     def calculate_angle_to_north(self, x_current, y_current, x_target, y_target):
         dx = x_target - x_current
@@ -121,32 +111,22 @@ class DroneMOAAPP:
             self.path_count += 1
 
 
-class Environment:
-    _instance = None
-    _initialized = False
-    
-    def __new__(cls, *_, **__):
-        if not cls._instance:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-    
+class Environment: 
+
     def __init__(self, x_max: float, y_max: float, z_max: float, train=True) -> None:
-        if not self._initialized:
-            self.x_max = x_max
-            self.y_max = y_max
-            self.z_max = z_max
-            
-            self.initialize_environment()
-            
-            self.agent = DroneMOAAPP((START_WAYPOINT[0], START_WAYPOINT[1], z_max), (x_max, y_max, z_max), self.obstacles, train)
-            
-            self._initialized = True
+        self.x_max = x_max
+        self.y_max = y_max
+        self.z_max = z_max
+        
+        self.initialize_environment()
+        
+        self.agent = DroneMOAAPP((START_WAYPOINT[0], START_WAYPOINT[1], z_max), (x_max, y_max, z_max), self.obstacles, train)
             
     def get_color(self, point_index):
         if point_index == 0:
-            return 'go-'
+            return 'g-'
         else:
-            return 'ro-'
+            return 'r-'
         
     def plot_static_points(self):
         plt.plot([self.start_point[0]], [self.start_point[1]], [self.start_point[2]], 'go')
@@ -202,9 +182,11 @@ class Environment:
             for _ in range(NUM_OBSTACLES):
                 x = rnd.uniform(0, self.x_max)
                 y = rnd.uniform(0, self.y_max)
-                radius = rnd.uniform(0.3, 2)
+                radius = rnd.uniform(0.1, 0.4)
                 
                 self.obstacles.append((x, y, radius))
+        
+        print(self.obstacles)
     
     def step(self, action):
         self.agent.move_drone(action)  # Move the drone based on the action
@@ -217,6 +199,11 @@ class Environment:
         elif self.agent.D < TARGET_ARRIVAL_THRESHOLD:  # Assuming TARGET_ARRIVAL_THRESHOLD is the arrival condition
             reward = 20  # Arrival reward
         else:
+            current_state = self.agent.position
+            
+            if current_state[0] < 0 or current_state[0] > self.x_max or current_state[1] < 0 or current_state[1] > self.y_max:
+                reward = -5
+            
             # Calculate distance-based reward
             distance_reward = 5 * (0.8 * self.agent.dmin / self.agent.D)
             
