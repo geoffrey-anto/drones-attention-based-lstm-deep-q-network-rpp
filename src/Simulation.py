@@ -1,15 +1,16 @@
-from src.DQNALSTM import DQNALSTM
+# from src.DQNALSTM import DQNALSTM
 from src.Config import SEQUENCE_LEN, STATE_SIZE, BATCH_SIZE, MAX_STEPS, MAP_SIZE
 from src.StateHistoryBuffer import StateHistoryBuffer
 from tqdm import tqdm
 from src.Environment import Environment
+from src.DQNLSTM import DQNLSTM
 
 
 class Simulation():
 
     def __init__(self, env: Environment):
         self.env = env
-        self.model = DQNALSTM(input_shape=(SEQUENCE_LEN, STATE_SIZE))
+        self.model = DQNLSTM(input_shape=(SEQUENCE_LEN, STATE_SIZE))
         self.state = StateHistoryBuffer()
 
     def run_train(self):
@@ -40,7 +41,7 @@ class Simulation():
         self.model.save("dqn_model.pkl")
 
     def run_test(self):
-        self.model.load("checkpoints/dqn_model_150.pkl")
+        self.model.load("saved/dqn_model_150.pkl")
         
         for _ in tqdm(range(300)):
             action = self.model.act(self.state, test=True)
