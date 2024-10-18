@@ -41,7 +41,7 @@ class Simulation():
         self.model.save("dqn_model.pkl")
 
     def run_test(self):
-        self.model.load("saved/dqn_model_150.pkl")
+        self.model.load("checkpoints/dqn_model_200.pkl")
         
         for _ in tqdm(range(300)):
             action = self.model.act(self.state, test=True)

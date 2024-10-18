@@ -91,9 +91,7 @@ class DroneMOAAPP:
         delta_x = SPEED * math.sin(new_psi)
         delta_y = SPEED * math.cos(new_psi)
         
-        self.position = (max(0, min(self.position[0] + delta_x, self.target_position[0])),
-                 max(0, min(self.position[1] + delta_y, self.target_position[1])),
-                 self.position[2])
+        self.position = (self.position[0] + delta_x, self.position[1] + delta_y, self.position[2])
         
         self.psi = new_psi
         self.psi = self.psi % 360
