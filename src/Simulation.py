@@ -16,7 +16,8 @@ class Simulation():
     def run_train(self):
         for i in tqdm(range(MAX_STEPS)):
             if i % 50 == 0:
-                self.model.save(f"checkpoints/dqn_model_{i}.pkl")
+                if i % 25 == 0:
+                    self.model.save(f"checkpoints/dqn_model_{i}.pkl")
                 self.env.show_environment()
                 
             action = self.model.act(self.state, test=False)
@@ -47,7 +48,6 @@ class Simulation():
             action = self.model.act(self.state, test=True)
             
             next_state, reward, done = self.env.step(action)
-            # print(f"Action: {action}, Reward: {reward}, State: {next_state}")
             
             self.state = self.state.get_next_state_history(next_state, action, reward)
             
