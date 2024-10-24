@@ -1,7 +1,5 @@
-tensorflow
-numpy
-msgpack-rpc-python==0.4.0
-airsim
+numpy==1.26.4
 matplotlib
-tornado
+tensorflow==2.17.0
 tqdm
+keras==3.4.1
