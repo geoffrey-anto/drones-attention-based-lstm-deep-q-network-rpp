@@ -42,7 +42,7 @@ class DQNLSTM:
         
     def act(self, state: StateHistoryBuffer, test=False):
         if test:
-            if np.random.rand() <= 0.1:
+            if np.random.rand() <= 0.15:
                 return np.random.choice(ACTION_SIZE)
             curr = state.get_state()
             curr = curr.reshape((1, SEQUENCE_LEN, STATE_SIZE))
@@ -102,3 +102,8 @@ class DQNLSTM:
     def load_model_pickle(self, name):
         with open(name, 'rb') as f:
             self.model = pickle.load(f)
+
+
+if __name__ == "__main__":
+    model = DQNLSTM((SEQUENCE_LEN, STATE_SIZE))
+    model.model.summary()
