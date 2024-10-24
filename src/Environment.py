@@ -26,6 +26,10 @@ class DroneMOAAPP:
         self.path_count = 0
         
         self.dmin = min(self.ds)
+        
+        self.global_dm = 0.0
+        self.min_distances_at_each_step = []
+        self.collision_count = set()
           
     def calculate_angle_to_north(self, x_current, y_current, x_target, y_target):
         dx = x_target - x_current
@@ -50,6 +54,9 @@ class DroneMOAAPP:
             
             d = abs(math.sqrt((self.position[0] - x) ** 2 + (self.position[1] - y) ** 2) - radius)
             
+            if d < 0.05:
+                self.collision_count.add(i)
+            
             obstacle_distances.append(d)
         
         obstacle_distances.sort()
@@ -58,6 +65,9 @@ class DroneMOAAPP:
             self.ds[i] = obstacle_distances[i]
             
         self.dmin = min(self.ds)
+        
+        self.global_dm = min(self.global_dm, self.dmin)
+        self.min_distances_at_each_step.append(self.dmin)
     
     def check_collision(self):
         return self.dmin <= MINIMUM_SAFETY_DISTANCE

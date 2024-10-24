@@ -42,8 +42,8 @@ class DQNALSTM:
         
     def act(self, state: StateHistoryBuffer, test=False):
         if test:
-            # if np.random.rand() <= 0.2:
-            #     return np.random.choice(ACTION_SIZE)
+            if np.random.rand() <= 0:
+                return np.random.choice(ACTION_SIZE)
             curr = state.get_state()
             curr = curr.reshape((1, SEQUENCE_LEN, STATE_SIZE))
             pred = self.model.predict(curr, verbose=0)[0]
